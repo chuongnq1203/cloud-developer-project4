@@ -69,9 +69,8 @@ functions:
           path: /
           method: get
 
-function:
   Auth:
-    handler: src/lambda/auth/auth0Authorizer.
+    handler: src/lambda/auth/auth0Authorizer.handler
     iamRoleStatements:
       - Effect: Allow
         Action:
