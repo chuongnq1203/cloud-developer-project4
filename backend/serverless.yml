@@ -26,9 +26,9 @@ provider:
   # Use these variables in the functions and resouorces section below. For example,
   # ${self:provider.environment.ATTACHMENT_S3_BUCKET}
   environment:
-    TODOS_TABLE: chuongnq1-table-${self:provider.stage}
+    TODOS_TABLE: chuongnq1203-table-${self:provider.stage}
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
-    ATTACHMENT_S3_BUCKET: chuongnq1-s3-${self:provider.stage}
+    ATTACHMENT_S3_BUCKET: chuongnq1203-s3-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
     PROJECT_NAME: serverless-todo-app-5
     INDEX_NAME: ${self:provider.environment.TODOS_CREATED_AT_INDEX}
@@ -218,6 +218,26 @@ functions:
           - xray:PutTelemetryRecords
         Resource:
           - '*'
+  # TODO: Configure this function
+  # Provide property for setting up CORS, Authorizer, iamRoleStatements
+  # Search function
+  SearchTodos:
+    handler: src/lambda/http/searchTodo.handler
+    events:
+      - http:
+          method: get
+          authorizer: Auth
+          path: search
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                key: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
 resources:
   Resources:
